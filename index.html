@@ -58,14 +58,38 @@
 
 			const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
 			const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
+			
+			const float div6  = 1.0/6.0;
 
 			void main() {
 
 				vUv = vec2( position.x / width, position.y / height );
 
 				vec4 color = texture2D( map, vUv );
-				float depth = ( color.r + color.g + color.b ) / 3.0;
+				//float depth = ( color.r + color.g + color.b ) / 3.0;
+				
+				float depth = -10000.0;
+				
+				float r = color.r;
+				float g = color.g;
+				float b = color.b;
+				
+				float maximum = max(b,max(r,g));
+				float minimum = min(b,min(r,g));
 
+				float delta = maximum - minimum;
+				if(delta>=0.1||delta<=-0.1) {
+					depth = 0.0;
+					if(r==maximum) depth = (g-b)/delta;
+					else if (g==maximum) depth = 2.0+(b-r)/delta;
+					else depth = 4.0+(r-g)/delta;
+					depth*=div6;
+					if(depth<0.0) depth+=1.0;
+					if(depth>1.0) depth-=1.0;
+					depth*0.15;
+					depth+=0.15;
+				}
+				
 				// Projection code by @kcmic
 
 				float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
