@@ -35,6 +35,10 @@
 		</style>
 	</head>
 	<body>
+		<a href="javascript:void(0);" onclick="loadSource('washitsu.webm');">和室 (webm / 641KB)</a><br />
+		<a href="javascript:void(0);" onclick="loadSource('washitsu.mp4');">和室 (mp4 / 4.2MB)</a><br />
+		<a href="javascript:void(0);" onclick="loadSource('car.webm');">車内 (webm / 3.4MB)</a><br />
+		<a href="javascript:void(0);" onclick="loadSource('shibuya.webm');">渋谷 (webm / 7.5MB)</a>
 
 		<script src="js/three.min.js"></script>
 
@@ -88,7 +92,7 @@
           depth*0.15;
           depth+=0.15;
         }
-
+        
 				// Projection code by @kcmic
 
 				float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
@@ -129,6 +133,8 @@
 			var geometry, cube, mesh, material;
 			var mouse, center;
 			var stats;
+			
+			var videoSrc = 'textures/washitsu.webm';
 
 			var video, texture;
 
@@ -148,11 +154,6 @@
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
-				var info = document.createElement( 'div' );
-				info.id = 'info';
-				info.innerHTML = '<a href="http://threejs.org" target="_blank">three.js</a> - kinect';
-				document.body.appendChild( info );
-
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
 				stats.domElement.style.top = '0px';
@@ -170,8 +171,8 @@
 
 					texture = new THREE.Texture( video );
 
-					var width = 640, height = 480;
-					var nearClipping = 850, farClipping = 4000;
+					var width = 512, height = 512;
+					var nearClipping = 10, farClipping = 10000;
 
 					geometry = new THREE.Geometry();
 
@@ -232,7 +233,7 @@
 
 				}, false );
 				video.loop = true;
-				video.src = 'textures/shibuya.webm';
+				video.src = videoSrc;
 				video.play();
 
 				renderer = new THREE.WebGLRenderer();
@@ -249,6 +250,20 @@
 
 			}
 
+      function loadSource(src) {
+        videoSrc = 'textures/' + src;
+                
+        video.loop = true;
+				video.src = videoSrc;
+				video.play();
+								
+        for (var i in scene.children) {
+          if (scene.children[i] !== camera) {
+            scene.remove(scene.children[i]);
+          }
+        }
+      }
+      
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
