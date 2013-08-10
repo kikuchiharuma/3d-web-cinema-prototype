@@ -137,7 +137,7 @@
 			var scene, camera, light, renderer;
 			var geometry, cube, mesh, material;
 			var mouse, center;
-			var stats;
+			var stats, gui;
 			
 			var videoSrc = 'textures/washitsu.webm';
 
@@ -226,15 +226,13 @@
 						}
 
 					}, 1000 / 30 );
-
-
-					var gui = new dat.GUI();
+               
+					gui = new dat.GUI();
 					gui.add( material.uniforms.nearClipping, 'value', 1, 10000, 1.0 ).name( 'nearClipping' );
 					gui.add( material.uniforms.farClipping, 'value', 1, 10000, 1.0 ).name( 'farClipping' );
 					gui.add( material.uniforms.pointSize, 'value', 1, 10, 1.0 ).name( 'pointSize' );
 					gui.add( material.uniforms.zOffset, 'value', 0, 4000, 1.0 ).name( 'zOffset' );
-					gui.close();
-
+					//gui.close();
 
 				}, false );
 				video.loop = true;
@@ -256,6 +254,8 @@
 			}
 
       function loadSource(src) {
+        gui.destroy();
+      
         videoSrc = 'textures/' + src;
                 
         video.loop = true;
